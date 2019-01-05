@@ -32,7 +32,7 @@ func TestMarkdownDialect_RenderIntermediate(t *testing.T) {
 
     expected := `# site title
 
-[image alt text](file://some/image/path)
+![image alt text](file://some/image/path "image alt text")
 
 `
 
@@ -122,26 +122,26 @@ func ExampleMarkdownDialect_RenderHtml() {
     //
     // <h1>Child Page 1</h1>
     //
-    // <p><a href="file://some/image/path">image alt text 2</a></p>
+    // <p><img src="file://some/image/path" alt="image alt text 2" title="image alt text 2" /></p>
     //
     // child2.html
     // ====================
     //
     // <h1>Child Page 2</h1>
     //
-    // <p><a href="file://some/image/path">image alt text 3</a></p>
+    // <p><img src="file://some/image/path" alt="image alt text 3" title="image alt text 3" /></p>
     //
     // childChild1.html
     // ====================
     //
     // <h1>Child&rsquo;s Child Page 1</h1>
     //
-    // <p><a href="file://some/image/path">image alt text 4</a></p>
+    // <p><img src="file://some/image/path" alt="image alt text 4" title="image alt text 4" /></p>
     //
     // index.html
     // ====================
     //
     // <h1>Site Title</h1>
     //
-    // <p><a href="file://some/image/path">image alt text 1</a></p>
+    // <p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
 }

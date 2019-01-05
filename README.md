@@ -93,36 +93,41 @@ for _, fi := range files {
 
     fmt.Printf("\n")
 }
-
-// Output:
-// child1.html
-// ====================
-//
-// <h1>Child Page 1</h1>
-//
-// <p><a href="file://some/image/path">image alt text 2</a></p>
-//
-// child2.html
-// ====================
-//
-// <h1>Child Page 2</h1>
-//
-// <p><a href="file://some/image/path">image alt text 3</a></p>
-//
-// childChild1.html
-// ====================
-//
-// <h1>Child&rsquo;s Child Page 1</h1>
-//
-// <p><a href="file://some/image/path">image alt text 4</a></p>
-//
-// index.html
-// ====================
-//
-// <h1>Site Title</h1>
-//
-// <p><a href="file://some/image/path">image alt text 1</a></p>
 ```
+
+Output:
+
+```
+child1.html
+====================
+
+<h1>Child Page 1</h1>
+
+<p><img src="file://some/image/path" alt="image alt text 2" title="image alt text 2" /></p>
+
+child2.html
+====================
+
+<h1>Child Page 2</h1>
+
+<p><img src="file://some/image/path" alt="image alt text 3" title="image alt text 3" /></p>
+
+childChild1.html
+====================
+
+<h1>Child&rsquo;s Child Page 1</h1>
+
+<p><img src="file://some/image/path" alt="image alt text 4" title="image alt text 4" /></p>
+
+index.html
+====================
+
+<h1>Site Title</h1>
+
+<p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
+```
+
+(In the example above, no links were added so no links are present.)
 
 
 # To Dos

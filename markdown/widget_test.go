@@ -21,7 +21,7 @@ func TestImageWidgetToMarkdown(t *testing.T) {
     log.PanicIf(err)
 
     content := b.String()
-    if content != "[alt text](file://some/image/path)" {
+    if content != "![alt text](file://some/image/path \"alt text\")" {
         t.Fatalf("Content not correct: [%s]", content)
     }
 }
