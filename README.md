@@ -21,7 +21,7 @@ This project was created in order to solve the problem of producing an HTML-base
 
 # Example
 
-Example from [github.com/dsoprea/go-static-site-builder/markdown](https://github.com/dsoprea/go-static-site-builder/tree/master/markdown):
+Example from [MarkdownDialect.RenderHtml](https://godoc.org/github.com/dsoprea/go-static-site-builder/markdown#example-MarkdownDialect-RenderHtml):
 
 ```go
 md := NewMarkdownDialect()
