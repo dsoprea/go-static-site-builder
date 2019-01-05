@@ -5,6 +5,7 @@ import (
     "fmt"
 
     "github.com/dsoprea/go-logging"
+    "gopkg.in/russross/blackfriday.v2"
 
     "github.com/dsoprea/go-static-site-builder"
 )
@@ -55,7 +56,10 @@ func (md *MarkdownDialect) RenderIntermediate(sn *sitebuilder.SiteNode) (err err
 // RenderHtml produces HTML from the dialect-specific content.
 func (md *MarkdownDialect) RenderHtml(sn *sitebuilder.SiteNode) (err error) {
 
-    // TODO(dustin): !! Finish.
+    intermediateOutput := sn.IntermediateOutput()
+    output := blackfriday.Run(intermediateOutput)
+
+    sn.SetFinalOutput(output)
 
     return nil
 }

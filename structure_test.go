@@ -224,9 +224,14 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
     err := pb.AddContentImage("image alt text", lrl)
     log.PanicIf(err)
 
-    childNode1 := rootNode.AddChild("child1", "Child1")
-    rootNode.AddChild("child2", "Child2")
-    childNode1.AddChild("childChild1", "ChildChild1")
+    childNode1, err := rootNode.AddChild("child1", "Child1")
+    log.PanicIf(err)
+
+    _, err = rootNode.AddChild("child2", "Child2")
+    log.PanicIf(err)
+
+    _, err = childNode1.AddChild("childChild1", "ChildChild1")
+    log.PanicIf(err)
 
     // Write.
 
@@ -266,5 +271,17 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
 
     if reflect.DeepEqual(actualFiles, expectedFiles) == false {
         t.Fatalf("Exact files weren't produced: %v", actualFiles)
+    }
+}
+
+func TestSiteNode_AddChild_InvalidFormat(t *testing.T) {
+    td := NewTestDialect()
+    sb := NewSiteBuilder("node title", td)
+
+    // Generate content.
+
+    _, err := sb.Root().AddChild("invalid child id", "child title1")
+    if err == nil || err.Error() != "page-ID has an invalid format" {
+        t.Fatalf("page-ID has an invalid format")
     }
 }

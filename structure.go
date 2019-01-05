@@ -4,13 +4,19 @@ import (
     "fmt"
     "io/ioutil"
     "path"
+    "regexp"
 
     "github.com/dsoprea/go-logging"
+)
+
+var (
+    pageIdRe *regexp.Regexp = nil
 )
 
 const (
     rootPageId                     = "index"
     defaultIdToLocalFilepathFormat = "%s.html"
+    defaultPageIdRePhrase          = `^[A-Za-z0-9_,.\\-]+$`
 )
 
 type WidgetType int
@@ -115,11 +121,21 @@ func (sn *SiteNode) Render() (err error) {
     return nil
 }
 
-// AddNode creates and appends a new child node for the current node and returns
-// it.
-func (sn *SiteNode) AddChild(pageId, pageTitle string) (childNode *SiteNode) {
+// AddChild creates and appends a new child node for the current node and
+// returns it.
+func (sn *SiteNode) AddChild(pageId, pageTitle string) (childNode *SiteNode, err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
     if _, found := sn.sb.pageIndex[pageId]; found == true {
         log.Panicf("node with page-ID [%s] already exists", pageId)
+    }
+
+    if pageIdRe.MatchString(pageId) == false {
+        log.Panicf("page-ID has an invalid format")
     }
 
     childNode = NewSiteNode(sn.sb, pageId, pageTitle)
@@ -127,7 +143,7 @@ func (sn *SiteNode) AddChild(pageId, pageTitle string) (childNode *SiteNode) {
 
     sn.Children = append(sn.Children, childNode)
 
-    return childNode
+    return childNode, nil
 }
 
 func (sn *SiteNode) Builder() *PageBuilder {
@@ -193,4 +209,11 @@ func (sb *SiteBuilder) writeToPath(sn *SiteNode, rootPath string) (err error) {
     }
 
     return nil
+}
+
+func init() {
+    var err error
+
+    pageIdRe, err = regexp.Compile(defaultPageIdRePhrase)
+    log.PanicIf(err)
 }
