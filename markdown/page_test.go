@@ -43,7 +43,9 @@ func TestMarkdownDialect_RenderIntermediate(t *testing.T) {
     }
 }
 
-func ExampleSiteBuilder_WriteToPath() {
+// ExampleMarkdownDialect_RenderHtml is a wholistic usage example. It is named
+// in such a way as to show up in the documentation.
+func ExampleMarkdownDialect_RenderHtml() {
     md := NewMarkdownDialect()
     sb := sitebuilder.NewSiteBuilder("Site Title", md)
 

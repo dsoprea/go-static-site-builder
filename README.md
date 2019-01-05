@@ -12,6 +12,7 @@ This project was created in order to solve the problem of producing an HTML-base
 
 # Features
 
+- Provides a simple builder tool to populate widgets.
 - Builds hierarchical website content as a general structure.
 - Website structure is serializable and therefore storable so that tit can be modified and rerendered later.
 - When the website is rendered, it is first rendered as intermediate content and then rendered and HTML content. This allows us to produce lightweight markup but offload the actual HTML production to a third-party tool. This also enables you to debug content issues in the HTML by inspecting the intermediate content.
