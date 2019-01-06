@@ -12,9 +12,7 @@ func NewPageBuilder(sn *SiteNode) *PageBuilder {
     }
 }
 
-func (pb *PageBuilder) AddContentImage(altText string, locator ResourceLocator) (err error) {
-    iw := NewImageWidget(altText, locator)
-
+func (pb *PageBuilder) AddContentImage(iw ImageWidget) (err error) {
     metadata := map[string]interface{}{
         "image": iw,
     }
@@ -29,15 +27,28 @@ func (pb *PageBuilder) AddContentImage(altText string, locator ResourceLocator) 
     return nil
 }
 
-func (pb *PageBuilder) AddChildrenNavbar(items []NavbarItem) (err error) {
-    nw := NewNavbarWidget(items)
-
+func (pb *PageBuilder) AddNavbar(nw NavbarWidget) (err error) {
     metadata := map[string]interface{}{
-        "children_navbar": nw,
+        "navbar": nw,
     }
 
     ps := PageStatement{
-        Type:              ChildrenNavbar,
+        Type:              Navbar,
+        StatementMetadata: metadata,
+    }
+
+    pb.sn.Content.Add(ps)
+
+    return nil
+}
+
+func (pb *PageBuilder) AddLink(lw LinkWidget) (err error) {
+    metadata := map[string]interface{}{
+        "link": lw,
+    }
+
+    ps := PageStatement{
+        Type:              Link,
         StatementMetadata: metadata,
     }
 

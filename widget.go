@@ -7,8 +7,11 @@ type WidgetType int
 // These should represent every method in the PageDialectBuilder interface.
 const (
     ContentImage WidgetType = 1 + iota
-    ChildrenNavbar
+    Navbar
+    Link
 )
+
+// Image
 
 type ImageWidget struct {
     AltText string
@@ -22,16 +25,27 @@ func NewImageWidget(altText string, locator ResourceLocator) (iw ImageWidget) {
     }
 }
 
-type NavbarItem struct {
-    Name   string
-    PageId string
+// Link
+
+type LinkWidget struct {
+    Text    string
+    Locator ResourceLocator
 }
+
+func NewLinkWidget(text string, locator ResourceLocator) (lw LinkWidget) {
+    return LinkWidget{
+        Text:    text,
+        Locator: locator,
+    }
+}
+
+// Navbar
 
 type NavbarWidget struct {
-    Items []NavbarItem
+    Items []LinkWidget
 }
 
-func NewNavbarWidget(items []NavbarItem) NavbarWidget {
+func NewNavbarWidget(items []LinkWidget) NavbarWidget {
     return NavbarWidget{
         Items: items,
     }

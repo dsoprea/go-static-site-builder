@@ -17,3 +17,12 @@ func ImageWidgetToMarkdown(iw sitebuilder.ImageWidget, w io.Writer) (err error) 
 
     return nil
 }
+
+func LinkWidgetToMarkdown(lw sitebuilder.LinkWidget, w io.Writer) (err error) {
+    uri := lw.Locator.Uri()
+
+    _, err = fmt.Fprintf(w, "[%s](%s)", lw.Text, uri)
+    log.PanicIf(err)
+
+    return nil
+}

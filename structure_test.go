@@ -35,8 +35,10 @@ func TestPageContent_Add(t *testing.T) {
 }
 
 func TestSiteNode_Render(t *testing.T) {
+    sc := NewSiteContext("")
+
     td := NewTestDialect()
-    sb := NewSiteBuilder("node title", td)
+    sb := NewSiteBuilder("node title", td, sc)
 
     // Generate content.
 
@@ -45,7 +47,9 @@ func TestSiteNode_Render(t *testing.T) {
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    err := pb.AddContentImage("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl)
+
+    err := pb.AddContentImage(iw)
     log.PanicIf(err)
 
     // Get output.
@@ -68,8 +72,10 @@ func TestSiteNode_Render(t *testing.T) {
 }
 
 func TestSiteNode_AddChildNode(t *testing.T) {
+    sc := NewSiteContext("")
+
     td := NewTestDialect()
-    sb := NewSiteBuilder("node title", td)
+    sb := NewSiteBuilder("node title", td, sc)
 
     // Generate content.
 
@@ -78,7 +84,9 @@ func TestSiteNode_AddChildNode(t *testing.T) {
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    err := pb.AddContentImage("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl)
+
+    err := pb.AddContentImage(iw)
     log.PanicIf(err)
 
     rootNode.AddChildNode("child1", "child title1")
@@ -104,25 +112,29 @@ func TestSiteNode_AddChildNode(t *testing.T) {
 }
 
 func TestSiteBuilder_WriteToPath(t *testing.T) {
+    tempPath, err := ioutil.TempDir("", "gssb")
+    log.PanicIf(err)
+
+    defer os.RemoveAll(tempPath)
+
+    sc := NewSiteContext(tempPath)
+
     td := NewTestDialect()
-    sb := NewSiteBuilder("site title", td)
+    sb := NewSiteBuilder("site title", td, sc)
 
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    err := pb.AddContentImage("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl)
+
+    err = pb.AddContentImage(iw)
     log.PanicIf(err)
 
     // Write.
 
-    tempPath, err := ioutil.TempDir("", "gssb")
-    log.PanicIf(err)
-
-    defer os.RemoveAll(tempPath)
-
-    err = sb.WriteToPath(tempPath)
+    err = sb.WriteToPath()
     log.PanicIf(err)
 
     // Read.
@@ -157,15 +169,24 @@ func TestSiteBuilder_WriteToPath(t *testing.T) {
 }
 
 func TestSiteBuilder_writeToPath_Simple(t *testing.T) {
+    tempPath, err := ioutil.TempDir("", "gssb")
+    log.PanicIf(err)
+
+    defer os.RemoveAll(tempPath)
+
+    sc := NewSiteContext(tempPath)
+
     td := NewTestDialect()
-    sb := NewSiteBuilder("site title", td)
+    sb := NewSiteBuilder("site title", td, sc)
 
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    err := pb.AddContentImage("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl)
+
+    err = pb.AddContentImage(iw)
     log.PanicIf(err)
 
     // Write.
@@ -173,12 +194,7 @@ func TestSiteBuilder_writeToPath_Simple(t *testing.T) {
     err = sb.rootNode.Render()
     log.PanicIf(err)
 
-    tempPath, err := ioutil.TempDir("", "gssb")
-    log.PanicIf(err)
-
-    defer os.RemoveAll(tempPath)
-
-    err = sb.writeToPath(rootNode, tempPath)
+    err = sb.writeToPath(rootNode)
     log.PanicIf(err)
 
     // Read.
@@ -213,15 +229,24 @@ func TestSiteBuilder_writeToPath_Simple(t *testing.T) {
 }
 
 func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
+    tempPath, err := ioutil.TempDir("", "gssb")
+    log.PanicIf(err)
+
+    defer os.RemoveAll(tempPath)
+
+    sc := NewSiteContext(tempPath)
+
     td := NewTestDialect()
-    sb := NewSiteBuilder("site title", td)
+    sb := NewSiteBuilder("site title", td, sc)
 
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    err := pb.AddContentImage("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl)
+
+    err = pb.AddContentImage(iw)
     log.PanicIf(err)
 
     childNode1, err := rootNode.AddChildNode("child1", "Child1")
@@ -238,12 +263,7 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
     err = sb.rootNode.Render()
     log.PanicIf(err)
 
-    tempPath, err := ioutil.TempDir("", "gssb")
-    log.PanicIf(err)
-
-    defer os.RemoveAll(tempPath)
-
-    err = sb.writeToPath(rootNode, tempPath)
+    err = sb.writeToPath(rootNode)
     log.PanicIf(err)
 
     // Read.
@@ -275,8 +295,10 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
 }
 
 func TestSiteNode_AddChildNode_InvalidFormat(t *testing.T) {
+    sc := NewSiteContext("")
+
     td := NewTestDialect()
-    sb := NewSiteBuilder("node title", td)
+    sb := NewSiteBuilder("node title", td, sc)
 
     // Generate content.
 

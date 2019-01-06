@@ -148,21 +148,54 @@ func (sn *SiteNode) Builder() *PageBuilder {
 
 // SiteBuilder contains all nodes for the current site being built.
 type SiteBuilder struct {
-    dialect                 Dialect
-    rootNode                *SiteNode
-    pageIndex               map[string]struct{}
+    dialect     Dialect
+    rootNode    *SiteNode
+    pageIndex   map[string]struct{}
+    siteContext *SiteContext
+}
+
+type SiteContext struct {
+    // htmlOutputPath is the path that HTML content will be written to.
+    htmlOutputPath string
+
+    // IdToLocalFilepathFormat is the filename template that we'll plug a page-
+    // ID into in order to produce the final filename.
     idToLocalFilepathFormat string
 }
 
-func NewSiteBuilder(siteTitle string, dialect Dialect) (sb *SiteBuilder) {
+func NewSiteContext(htmlOutputPath string) *SiteContext {
+    return &SiteContext{
+        htmlOutputPath:          htmlOutputPath,
+        idToLocalFilepathFormat: defaultIdToLocalFilepathFormat,
+    }
+}
+
+// func (sc *SiteContext) IdToLocalFilepathFormat() string {
+//     return sc.toLocalFilepathFormat
+// }
+
+func (sc *SiteContext) SetIdToLocalFilepathFormat(format string) {
+    sc.idToLocalFilepathFormat = format
+}
+
+func (sc *SiteContext) HtmlOutputPath() string {
+    return sc.htmlOutputPath
+}
+
+func (sc *SiteContext) GetFinalPageFilename(pageId string) string {
+    filename := fmt.Sprintf(sc.idToLocalFilepathFormat, pageId)
+    return filename
+}
+
+func NewSiteBuilder(siteTitle string, dialect Dialect, siteContext *SiteContext) (sb *SiteBuilder) {
     pageIndex := map[string]struct{}{
         rootPageId: struct{}{},
     }
 
     sb = &SiteBuilder{
-        dialect:                 dialect,
-        pageIndex:               pageIndex,
-        idToLocalFilepathFormat: defaultIdToLocalFilepathFormat,
+        dialect:     dialect,
+        pageIndex:   pageIndex,
+        siteContext: siteContext,
     }
 
     rootNode := NewSiteNode(sb, rootPageId, siteTitle)
@@ -171,18 +204,14 @@ func NewSiteBuilder(siteTitle string, dialect Dialect) (sb *SiteBuilder) {
     return sb
 }
 
-func (sb *SiteBuilder) SetIdToLocalFilepathFormat(format string) {
-    sb.idToLocalFilepathFormat = format
-}
-
 func (sb *SiteBuilder) PageIsValid(pageId string) bool {
     _, found := sb.pageIndex[pageId]
     return found
 }
 
-func (sb *SiteBuilder) GetFinalPageFilename(pageId string) string {
-    filename := fmt.Sprintf(sb.idToLocalFilepathFormat, pageId)
-    return filename
+// Root is the root node (homepage) of the site.
+func (sb *SiteBuilder) Context() (siteContext *SiteContext) {
+    return sb.siteContext
 }
 
 // Root is the root node (homepage) of the site.
@@ -190,19 +219,19 @@ func (sb *SiteBuilder) Root() (rootNode *SiteNode) {
     return sb.rootNode
 }
 
-func (sb *SiteBuilder) WriteToPath(rootPath string) (err error) {
+func (sb *SiteBuilder) WriteToPath() (err error) {
     err = sb.rootNode.Render()
     log.PanicIf(err)
 
-    err = sb.writeToPath(sb.rootNode, rootPath)
+    err = sb.writeToPath(sb.rootNode)
     log.PanicIf(err)
 
     return nil
 }
 
-func (sb *SiteBuilder) writeToPath(sn *SiteNode, rootPath string) (err error) {
-    filename := sb.GetFinalPageFilename(sn.PageId)
-    pageFilepath := path.Join(rootPath, filename)
+func (sb *SiteBuilder) writeToPath(sn *SiteNode) (err error) {
+    filename := sb.Context().GetFinalPageFilename(sn.PageId)
+    pageFilepath := path.Join(sb.siteContext.htmlOutputPath, filename)
 
     finalOutput := sn.FinalOutput()
 
@@ -210,7 +239,7 @@ func (sb *SiteBuilder) writeToPath(sn *SiteNode, rootPath string) (err error) {
     log.PanicIf(err)
 
     for _, childNode := range sn.Children {
-        err := sb.writeToPath(childNode, rootPath)
+        err := sb.writeToPath(childNode)
         log.PanicIf(err)
     }
 

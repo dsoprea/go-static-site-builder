@@ -3,6 +3,7 @@ package markdowndialect
 import (
     "bytes"
     "fmt"
+    "io"
 
     "github.com/dsoprea/go-logging"
     "gopkg.in/russross/blackfriday.v2"
@@ -33,24 +34,30 @@ func (md *MarkdownDialect) RenderIntermediate(sn *sitebuilder.SiteNode) (err err
             err = ImageWidgetToMarkdown(iw, b)
             log.PanicIf(err)
 
-            _, err = b.Write([]byte("\n\n"))
+            err = md.writeDoubleNewline(b)
             log.PanicIf(err)
 
-        case sitebuilder.ChildrenNavbar:
-            nw := ps.StatementMetadata["children_navbar"].(sitebuilder.NavbarWidget)
+        case sitebuilder.Navbar:
+            nw := ps.StatementMetadata["navbar"].(sitebuilder.NavbarWidget)
 
-            for _, ni := range nw.Items {
-                if found := sn.SiteBuilder().PageIsValid(ni.PageId); found == false {
-                    log.Panicf("page [%s] refers to invalid page [%s] in navbar", sn.PageId, ni.PageId)
-                }
+            for _, lw := range nw.Items {
+                err = LinkWidgetToMarkdown(lw, b)
+                log.PanicIf(err)
 
-                url := sn.SiteBuilder().GetFinalPageFilename(ni.PageId)
-
-                _, err := fmt.Fprintf(b, "[%s](%s) ", ni.Name, url)
+                _, err = b.Write([]byte{' '})
                 log.PanicIf(err)
             }
 
-            _, err = b.Write([]byte("\n\n"))
+            err = md.writeDoubleNewline(b)
+            log.PanicIf(err)
+
+        case sitebuilder.Link:
+            lw := ps.StatementMetadata["link"].(sitebuilder.LinkWidget)
+
+            err = LinkWidgetToMarkdown(lw, b)
+            log.PanicIf(err)
+
+            err = md.writeDoubleNewline(b)
             log.PanicIf(err)
 
         default:
@@ -65,6 +72,13 @@ func (md *MarkdownDialect) RenderIntermediate(sn *sitebuilder.SiteNode) (err err
         err := md.RenderIntermediate(childNode)
         log.PanicIf(err)
     }
+
+    return nil
+}
+
+func (md *MarkdownDialect) writeDoubleNewline(w io.Writer) (err error) {
+    _, err = w.Write([]byte{'\n', '\n'})
+    log.PanicIf(err)
 
     return nil
 }
