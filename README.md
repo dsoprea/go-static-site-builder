@@ -12,10 +12,10 @@ This project was created in order to solve the problem of producing an HTML-base
 
 # Features
 
-- Provides a simple builder tool to populate widgets.
-- Builds hierarchical website content as a general structure.
-- Website structure is serializable and therefore storable so that tit can be modified and rerendered later.
-- When the website is rendered, it is first rendered as intermediate content and then rendered and HTML content. This allows us to produce lightweight markup but offload the actual HTML production to a third-party tool. This also enables you to debug content issues in the HTML by inspecting the intermediate content.
+- Provides a simple builder type to populate widgets into nodes.
+- Expresses website content as a general, hierarchical node structure.
+- Website structure is serializable and therefore storable so that it can be stored, recalled, modified, and rerendered later.
+- When the website is rendered, it is first rendered as intermediate content and then rendered as HTML content. This allows us to focus on producing lightweight markup while being able to offload the actual HTML production to a third-party tool that specializes in that. This consequently enables you to debug content issues in the HTML by inspecting the intermediate content.
 - The intermediate content supports multiple dialects. This project comes with a [Markdown](https://daringfireball.net/projects/markdown) dialect.
 
 
