@@ -38,7 +38,7 @@ lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 err := rootPb.AddContentImage("image alt text 1", lrl)
 log.PanicIf(err)
 
-childNode1, err := rootNode.AddChild("child1", "Child Page 1")
+childNode1, err := rootNode.AddChildNode("child1", "Child Page 1")
 log.PanicIf(err)
 
 childPb := childNode1.Builder()
@@ -46,7 +46,7 @@ childPb := childNode1.Builder()
 err = childPb.AddContentImage("image alt text 2", lrl)
 log.PanicIf(err)
 
-childNode2, err := rootNode.AddChild("child2", "Child Page 2")
+childNode2, err := rootNode.AddChildNode("child2", "Child Page 2")
 log.PanicIf(err)
 
 childPb = childNode2.Builder()
@@ -54,7 +54,7 @@ childPb = childNode2.Builder()
 err = childPb.AddContentImage("image alt text 3", lrl)
 log.PanicIf(err)
 
-childChildNode1, err := childNode1.AddChild("childChild1", "Child's Child Page 1")
+childChildNode1, err := childNode1.AddChildNode("childChild1", "Child's Child Page 1")
 log.PanicIf(err)
 
 childPb = childChildNode1.Builder()

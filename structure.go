@@ -113,9 +113,9 @@ func (sn *SiteNode) Render() (err error) {
     return nil
 }
 
-// AddChild creates and appends a new child node for the current node and
+// AddChildNode creates and appends a new child node for the current node and
 // returns it.
-func (sn *SiteNode) AddChild(pageId, pageTitle string) (childNode *SiteNode, err error) {
+func (sn *SiteNode) AddChildNode(pageId, pageTitle string) (childNode *SiteNode, err error) {
     defer func() {
         if state := recover(); state != nil {
             err = log.Wrap(state.(error))

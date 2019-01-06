@@ -67,7 +67,7 @@ func TestSiteNode_Render(t *testing.T) {
     }
 }
 
-func TestSiteNode_AddChild(t *testing.T) {
+func TestSiteNode_AddChildNode(t *testing.T) {
     td := NewTestDialect()
     sb := NewSiteBuilder("node title", td)
 
@@ -81,8 +81,8 @@ func TestSiteNode_AddChild(t *testing.T) {
     err := pb.AddContentImage("image alt text", lrl)
     log.PanicIf(err)
 
-    rootNode.AddChild("child1", "child title1")
-    rootNode.AddChild("child2", "child title2")
+    rootNode.AddChildNode("child1", "child title1")
+    rootNode.AddChildNode("child2", "child title2")
 
     // Get output.
 
@@ -224,13 +224,13 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
     err := pb.AddContentImage("image alt text", lrl)
     log.PanicIf(err)
 
-    childNode1, err := rootNode.AddChild("child1", "Child1")
+    childNode1, err := rootNode.AddChildNode("child1", "Child1")
     log.PanicIf(err)
 
-    _, err = rootNode.AddChild("child2", "Child2")
+    _, err = rootNode.AddChildNode("child2", "Child2")
     log.PanicIf(err)
 
-    _, err = childNode1.AddChild("childChild1", "ChildChild1")
+    _, err = childNode1.AddChildNode("childChild1", "ChildChild1")
     log.PanicIf(err)
 
     // Write.
@@ -274,13 +274,13 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
     }
 }
 
-func TestSiteNode_AddChild_InvalidFormat(t *testing.T) {
+func TestSiteNode_AddChildNode_InvalidFormat(t *testing.T) {
     td := NewTestDialect()
     sb := NewSiteBuilder("node title", td)
 
     // Generate content.
 
-    _, err := sb.Root().AddChild("invalid child id", "child title1")
+    _, err := sb.Root().AddChildNode("invalid child id", "child title1")
     if err == nil || err.Error() != "page-ID has an invalid format" {
         t.Fatalf("page-ID has an invalid format")
     }
