@@ -31,35 +31,49 @@ rootNode := sb.Root()
 
 // Create content.
 
-pb := rootNode.Builder()
+rootPb := rootNode.Builder()
 
 lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 
-err := pb.AddContentImage("image alt text 1", lrl)
+err := rootPb.AddContentImage("image alt text 1", lrl)
 log.PanicIf(err)
 
 childNode1, err := rootNode.AddChild("child1", "Child Page 1")
 log.PanicIf(err)
 
-pb = childNode1.Builder()
+childPb := childNode1.Builder()
 
-err = pb.AddContentImage("image alt text 2", lrl)
+err = childPb.AddContentImage("image alt text 2", lrl)
 log.PanicIf(err)
 
 childNode2, err := rootNode.AddChild("child2", "Child Page 2")
 log.PanicIf(err)
 
-pb = childNode2.Builder()
+childPb = childNode2.Builder()
 
-err = pb.AddContentImage("image alt text 3", lrl)
+err = childPb.AddContentImage("image alt text 3", lrl)
 log.PanicIf(err)
 
 childChildNode1, err := childNode1.AddChild("childChild1", "Child's Child Page 1")
 log.PanicIf(err)
 
-pb = childChildNode1.Builder()
+childPb = childChildNode1.Builder()
 
-err = pb.AddContentImage("image alt text 4", lrl)
+err = childPb.AddContentImage("image alt text 4", lrl)
+log.PanicIf(err)
+
+items := []sitebuilder.NavbarItem{
+    {
+        Name:   "Child1",
+        PageId: "child1",
+    },
+    {
+        Name:   "Child2",
+        PageId: "child2",
+    },
+}
+
+err = rootPb.AddChildrenNavbar(items)
 log.PanicIf(err)
 
 // Render and write.
@@ -125,6 +139,8 @@ index.html
 <h1>Site Title</h1>
 
 <p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
+
+<p><a href="child1.html">Child1</a> <a href="child2.html">Child2</a></p>
 ```
 
 (In the example above, no links were added so no links are present.)

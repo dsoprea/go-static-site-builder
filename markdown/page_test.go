@@ -12,7 +12,7 @@ import (
     "github.com/dsoprea/go-static-site-builder"
 )
 
-func TestMarkdownDialect_RenderIntermediate(t *testing.T) {
+func TestMarkdownDialect_RenderIntermediate_Image(t *testing.T) {
     md := NewMarkdownDialect()
 
     sb := sitebuilder.NewSiteBuilder("site title", md)
@@ -53,35 +53,49 @@ func ExampleMarkdownDialect_RenderHtml() {
 
     // Create content.
 
-    pb := rootNode.Builder()
+    rootPb := rootNode.Builder()
 
     lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 
-    err := pb.AddContentImage("image alt text 1", lrl)
+    err := rootPb.AddContentImage("image alt text 1", lrl)
     log.PanicIf(err)
 
     childNode1, err := rootNode.AddChild("child1", "Child Page 1")
     log.PanicIf(err)
 
-    pb = childNode1.Builder()
+    childPb := childNode1.Builder()
 
-    err = pb.AddContentImage("image alt text 2", lrl)
+    err = childPb.AddContentImage("image alt text 2", lrl)
     log.PanicIf(err)
 
     childNode2, err := rootNode.AddChild("child2", "Child Page 2")
     log.PanicIf(err)
 
-    pb = childNode2.Builder()
+    childPb = childNode2.Builder()
 
-    err = pb.AddContentImage("image alt text 3", lrl)
+    err = childPb.AddContentImage("image alt text 3", lrl)
     log.PanicIf(err)
 
     childChildNode1, err := childNode1.AddChild("childChild1", "Child's Child Page 1")
     log.PanicIf(err)
 
-    pb = childChildNode1.Builder()
+    childPb = childChildNode1.Builder()
 
-    err = pb.AddContentImage("image alt text 4", lrl)
+    err = childPb.AddContentImage("image alt text 4", lrl)
+    log.PanicIf(err)
+
+    items := []sitebuilder.NavbarItem{
+        {
+            Name:   "Child1",
+            PageId: "child1",
+        },
+        {
+            Name:   "Child2",
+            PageId: "child2",
+        },
+    }
+
+    err = rootPb.AddChildrenNavbar(items)
     log.PanicIf(err)
 
     // Render and write.
@@ -144,4 +158,51 @@ func ExampleMarkdownDialect_RenderHtml() {
     // <h1>Site Title</h1>
     //
     // <p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
+    //
+    // <p><a href="child1.html">Child1</a> <a href="child2.html">Child2</a></p>
+}
+
+func TestMarkdownDialect_RenderIntermediate_ChildrenNavbar(t *testing.T) {
+    md := NewMarkdownDialect()
+
+    sb := sitebuilder.NewSiteBuilder("site title", md)
+    rootNode := sb.Root()
+    pb := rootNode.Builder()
+
+    items := []sitebuilder.NavbarItem{
+        {
+            Name:   "Child1",
+            PageId: "child1",
+        },
+        {
+            Name:   "Child2",
+            PageId: "child2",
+        },
+    }
+
+    err := pb.AddChildrenNavbar(items)
+    log.PanicIf(err)
+
+    // The child nodes can be added after or before the navbar, or even later,
+    // but the page-IDs must be valid by the time we render.
+
+    _, err = rootNode.AddChild("child1", "Child Page 1")
+    log.PanicIf(err)
+
+    _, err = rootNode.AddChild("child2", "Child Page 2")
+    log.PanicIf(err)
+
+    err = md.RenderIntermediate(rootNode)
+    log.PanicIf(err)
+
+    actual := rootNode.IntermediateOutput()
+
+    expected := "# site title\n\n[Child1](child1.html) [Child2](child2.html) \n\n"
+
+    if string(actual) != expected {
+        fmt.Printf("ACTUAL:\n=====\n%s=====\n", actual)
+        fmt.Printf("EXPECTED:\n=====\n%s=====\n", expected)
+
+        t.Fatalf("Unexpected output.")
+    }
 }

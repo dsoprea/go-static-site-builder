@@ -19,14 +19,6 @@ const (
     defaultPageIdRePhrase          = `^[A-Za-z0-9_,.\\-]+$`
 )
 
-type WidgetType int
-
-// These should represent every method in the PageDialectBuilder interface.
-const (
-    ContentImage WidgetType = 1 + iota
-    ChildNavbar
-)
-
 // PageStatement defines one or more statements that represent a single widget
 // or feature added by a single call to DialectPageBuilder.
 type PageStatement struct {
@@ -146,6 +138,10 @@ func (sn *SiteNode) AddChild(pageId, pageTitle string) (childNode *SiteNode, err
     return childNode, nil
 }
 
+func (sn *SiteNode) SiteBuilder() *SiteBuilder {
+    return sn.sb
+}
+
 func (sn *SiteNode) Builder() *PageBuilder {
     return NewPageBuilder(sn)
 }
@@ -179,6 +175,16 @@ func (sb *SiteBuilder) SetIdToLocalFilepathFormat(format string) {
     sb.idToLocalFilepathFormat = format
 }
 
+func (sb *SiteBuilder) PageIsValid(pageId string) bool {
+    _, found := sb.pageIndex[pageId]
+    return found
+}
+
+func (sb *SiteBuilder) GetFinalPageFilename(pageId string) string {
+    filename := fmt.Sprintf(sb.idToLocalFilepathFormat, pageId)
+    return filename
+}
+
 // Root is the root node (homepage) of the site.
 func (sb *SiteBuilder) Root() (rootNode *SiteNode) {
     return sb.rootNode
@@ -195,7 +201,7 @@ func (sb *SiteBuilder) WriteToPath(rootPath string) (err error) {
 }
 
 func (sb *SiteBuilder) writeToPath(sn *SiteNode, rootPath string) (err error) {
-    filename := fmt.Sprintf(sb.idToLocalFilepathFormat, sn.PageId)
+    filename := sb.GetFinalPageFilename(sn.PageId)
     pageFilepath := path.Join(rootPath, filename)
 
     finalOutput := sn.FinalOutput()

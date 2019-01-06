@@ -2,6 +2,14 @@ package sitebuilder
 
 import ()
 
+type WidgetType int
+
+// These should represent every method in the PageDialectBuilder interface.
+const (
+    ContentImage WidgetType = 1 + iota
+    ChildrenNavbar
+)
+
 type ImageWidget struct {
     AltText string
     Locator ResourceLocator

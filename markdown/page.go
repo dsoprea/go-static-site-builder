@@ -36,7 +36,23 @@ func (md *MarkdownDialect) RenderIntermediate(sn *sitebuilder.SiteNode) (err err
             _, err = b.Write([]byte("\n\n"))
             log.PanicIf(err)
 
-            // TODO(dustin): !! Finish handling navbar.
+        case sitebuilder.ChildrenNavbar:
+            nw := ps.StatementMetadata["children_navbar"].(sitebuilder.NavbarWidget)
+
+            for _, ni := range nw.Items {
+                if found := sn.SiteBuilder().PageIsValid(ni.PageId); found == false {
+                    log.Panicf("page [%s] refers to invalid page [%s] in navbar", sn.PageId, ni.PageId)
+                }
+
+                url := sn.SiteBuilder().GetFinalPageFilename(ni.PageId)
+
+                _, err := fmt.Fprintf(b, "[%s](%s) ", ni.Name, url)
+                log.PanicIf(err)
+            }
+
+            _, err = b.Write([]byte("\n\n"))
+            log.PanicIf(err)
+
         default:
             log.Panicf("widget not valid")
         }

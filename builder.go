@@ -29,15 +29,15 @@ func (pb *PageBuilder) AddContentImage(altText string, locator ResourceLocator) 
     return nil
 }
 
-func (pb *PageBuilder) AddChildNavbar(items []NavbarItem) (err error) {
+func (pb *PageBuilder) AddChildrenNavbar(items []NavbarItem) (err error) {
     nw := NewNavbarWidget(items)
 
     metadata := map[string]interface{}{
-        "child_navbar": nw,
+        "children_navbar": nw,
     }
 
     ps := PageStatement{
-        Type:              ChildNavbar,
+        Type:              ChildrenNavbar,
         StatementMetadata: metadata,
     }
 
