@@ -24,8 +24,15 @@ This project was created in order to solve the problem of producing an HTML-base
 Example from [MarkdownDialect.RenderHtml](https://godoc.org/github.com/dsoprea/go-static-site-builder/markdown#example-MarkdownDialect-RenderHtml):
 
 ```go
+tempPath, err := ioutil.TempDir("", "")
+log.PanicIf(err)
+
+defer os.RemoveAll(tempPath)
+
+sc := sitebuilder.NewSiteContext(tempPath)
 md := NewMarkdownDialect()
-sb := sitebuilder.NewSiteBuilder("Site Title", md)
+
+sb := sitebuilder.NewSiteBuilder("Site Title", md, sc)
 
 rootNode := sb.Root()
 
@@ -35,7 +42,9 @@ rootPb := rootNode.Builder()
 
 lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 
-err := rootPb.AddContentImage("image alt text 1", lrl)
+iw := sitebuilder.NewImageWidget("image alt text 1", lrl)
+
+err = rootPb.AddContentImage(iw)
 log.PanicIf(err)
 
 childNode1, err := rootNode.AddChildNode("child1", "Child Page 1")
@@ -43,7 +52,9 @@ log.PanicIf(err)
 
 childPb := childNode1.Builder()
 
-err = childPb.AddContentImage("image alt text 2", lrl)
+iw = sitebuilder.NewImageWidget("image alt text 2", lrl)
+
+err = childPb.AddContentImage(iw)
 log.PanicIf(err)
 
 childNode2, err := rootNode.AddChildNode("child2", "Child Page 2")
@@ -51,7 +62,9 @@ log.PanicIf(err)
 
 childPb = childNode2.Builder()
 
-err = childPb.AddContentImage("image alt text 3", lrl)
+iw = sitebuilder.NewImageWidget("image alt text 3", lrl)
+
+err = childPb.AddContentImage(iw)
 log.PanicIf(err)
 
 childChildNode1, err := childNode1.AddChildNode("childChild1", "Child's Child Page 1")
@@ -59,31 +72,24 @@ log.PanicIf(err)
 
 childPb = childChildNode1.Builder()
 
-err = childPb.AddContentImage("image alt text 4", lrl)
+iw = sitebuilder.NewImageWidget("image alt text 4", lrl)
+
+err = childPb.AddContentImage(iw)
 log.PanicIf(err)
 
-items := []sitebuilder.NavbarItem{
-    {
-        Name:   "Child1",
-        PageId: "child1",
-    },
-    {
-        Name:   "Child2",
-        PageId: "child2",
-    },
+items := []sitebuilder.LinkWidget{
+    sitebuilder.NewLinkWidget("Child1", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child1")),
+    sitebuilder.NewLinkWidget("Child2", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child2")),
 }
 
-err = rootPb.AddChildrenNavbar(items)
+nw := sitebuilder.NewNavbarWidget(items)
+
+err = rootPb.AddNavbar(nw)
 log.PanicIf(err)
 
 // Render and write.
 
-tempPath, err := ioutil.TempDir("", "")
-log.PanicIf(err)
-
-defer os.RemoveAll(tempPath)
-
-err = sb.WriteToPath(tempPath)
+err = sb.WriteToPath()
 log.PanicIf(err)
 
 // Print.
@@ -102,7 +108,10 @@ for _, fi := range files {
     content, err := ioutil.ReadFile(filepath)
     log.PanicIf(err)
 
-    _, err = os.Stdout.Write(content)
+    // For the [testable] example.
+    fixedContent := strings.Replace(string(content), tempPath, "example_path", -1)
+
+    _, err = os.Stdout.Write([]byte(fixedContent))
     log.PanicIf(err)
 
     fmt.Printf("\n")
@@ -140,7 +149,7 @@ index.html
 
 <p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
 
-<p><a href="child1.html">Child1</a> <a href="child2.html">Child2</a></p>
+<p><a href="file://example_path/child1.html">Child1</a> <a href="file://example_path/child2.html">Child2</a></p>
 ```
 
 (In the example above, no links were added so no links are present.)
