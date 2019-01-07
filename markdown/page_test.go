@@ -104,8 +104,8 @@ func ExampleMarkdownDialect_RenderHtml() {
     log.PanicIf(err)
 
     items := []sitebuilder.LinkWidget{
-        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child1")),
-        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child2")),
+        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewSitePageLocalResourceLocator(sb, "child1")),
+        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewSitePageLocalResourceLocator(sb, "child2")),
     }
 
     nw := sitebuilder.NewNavbarWidget(items)
@@ -184,8 +184,8 @@ func TestMarkdownDialect_RenderIntermediate_Navbar(t *testing.T) {
     pb := rootNode.Builder()
 
     items := []sitebuilder.LinkWidget{
-        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child1")),
-        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child2")),
+        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewSitePageLocalResourceLocator(sb, "child1")),
+        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewSitePageLocalResourceLocator(sb, "child2")),
     }
 
     nw := sitebuilder.NewNavbarWidget(items)
@@ -225,8 +225,8 @@ func TestMarkdownDialect_RenderIntermediate_Link(t *testing.T) {
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
-    pplrl := sitebuilder.NewProjectPageLocalResourceLocator(sb, "child1")
-    lw := sitebuilder.NewLinkWidget("Child1", pplrl)
+    splrl := sitebuilder.NewSitePageLocalResourceLocator(sb, "child1")
+    lw := sitebuilder.NewLinkWidget("Child1", splrl)
 
     err := pb.AddLink(lw)
     log.PanicIf(err)

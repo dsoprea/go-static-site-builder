@@ -21,25 +21,25 @@ func (lrl *LocalResourceLocator) Uri() string {
     return fmt.Sprintf("file://%s", lrl.LocalFilepath)
 }
 
-type ProjectPageLocalResourceLocator struct {
+type SitePageLocalResourceLocator struct {
     sb     *SiteBuilder
     PageId string
 }
 
-func NewProjectPageLocalResourceLocator(sb *SiteBuilder, pageId string) (pplrl *ProjectPageLocalResourceLocator) {
-    return &ProjectPageLocalResourceLocator{
+func NewSitePageLocalResourceLocator(sb *SiteBuilder, pageId string) (splrl *SitePageLocalResourceLocator) {
+    return &SitePageLocalResourceLocator{
         sb:     sb,
         PageId: pageId,
     }
 }
 
-func (pplrl *ProjectPageLocalResourceLocator) Uri() string {
-    if found := pplrl.sb.PageIsValid(pplrl.PageId); found == false {
-        log.Panicf("resource refers to invalid page-ID [%s]", pplrl.PageId)
+func (splrl *SitePageLocalResourceLocator) Uri() string {
+    if found := splrl.sb.PageIsValid(splrl.PageId); found == false {
+        log.Panicf("resource refers to invalid page-ID [%s]", splrl.PageId)
     }
 
-    outputPath := pplrl.sb.Context().HtmlOutputPath()
-    filename := pplrl.sb.Context().GetFinalPageFilename(pplrl.PageId)
+    outputPath := splrl.sb.Context().HtmlOutputPath()
+    filename := splrl.sb.Context().GetFinalPageFilename(splrl.PageId)
     filepath := path.Join(outputPath, filename)
 
     return fmt.Sprintf("file://%s", filepath)

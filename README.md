@@ -78,8 +78,8 @@ err = childPb.AddContentImage(iw)
 log.PanicIf(err)
 
 items := []sitebuilder.LinkWidget{
-    sitebuilder.NewLinkWidget("Child1", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child1")),
-    sitebuilder.NewLinkWidget("Child2", sitebuilder.NewProjectPageLocalResourceLocator(sb, "child2")),
+    sitebuilder.NewLinkWidget("Child1", sitebuilder.NewSitePageLocalResourceLocator(sb, "child1")),
+    sitebuilder.NewLinkWidget("Child2", sitebuilder.NewSitePageLocalResourceLocator(sb, "child2")),
 }
 
 nw := sitebuilder.NewNavbarWidget(items)
