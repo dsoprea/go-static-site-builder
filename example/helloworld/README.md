@@ -1,6 +1,6 @@
 # Overview
 
-This is a command-line example that'll produce a tiny, functioning static website with multiple sub-pages and embedded images.
+This is a command-line example that will produce a tiny, functioning static website with multiple sub-pages and embedded images.
 
 # Running
 
