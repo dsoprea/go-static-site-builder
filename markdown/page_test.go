@@ -24,7 +24,7 @@ func TestMarkdownDialect_RenderIntermediate_Image(t *testing.T) {
 
     lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 
-    iw := sitebuilder.NewImageWidget("image alt text", lrl)
+    iw := sitebuilder.NewImageWidget("image alt text", lrl, 0, 0)
 
     err := pb.AddContentImage(iw)
     log.PanicIf(err)
@@ -68,7 +68,7 @@ func ExampleMarkdownDialect_RenderHtml() {
 
     lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 
-    iw := sitebuilder.NewImageWidget("image alt text 1", lrl)
+    iw := sitebuilder.NewImageWidget("image alt text 1", lrl, 0, 0)
 
     err = rootPb.AddContentImage(iw)
     log.PanicIf(err)
@@ -78,7 +78,7 @@ func ExampleMarkdownDialect_RenderHtml() {
 
     childPb := childNode1.Builder()
 
-    iw = sitebuilder.NewImageWidget("image alt text 2", lrl)
+    iw = sitebuilder.NewImageWidget("image alt text 2", lrl, 0, 0)
 
     err = childPb.AddContentImage(iw)
     log.PanicIf(err)
@@ -88,7 +88,7 @@ func ExampleMarkdownDialect_RenderHtml() {
 
     childPb = childNode2.Builder()
 
-    iw = sitebuilder.NewImageWidget("image alt text 3", lrl)
+    iw = sitebuilder.NewImageWidget("image alt text 3", lrl, 0, 0)
 
     err = childPb.AddContentImage(iw)
     log.PanicIf(err)
@@ -98,7 +98,7 @@ func ExampleMarkdownDialect_RenderHtml() {
 
     childPb = childChildNode1.Builder()
 
-    iw = sitebuilder.NewImageWidget("image alt text 4", lrl)
+    iw = sitebuilder.NewImageWidget("image alt text 4", lrl, 0, 0)
 
     err = childPb.AddContentImage(iw)
     log.PanicIf(err)
@@ -172,7 +172,7 @@ func ExampleMarkdownDialect_RenderHtml() {
     //
     // <p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
     //
-    // <p><a href="file://example_path/child1.html">Child1</a> <a href="file://example_path/child2.html">Child2</a></p>
+    // <p><a href="child1.html">Child1</a> <a href="child2.html">Child2</a></p>
 }
 
 func TestMarkdownDialect_RenderIntermediate_Navbar(t *testing.T) {
@@ -207,7 +207,7 @@ func TestMarkdownDialect_RenderIntermediate_Navbar(t *testing.T) {
 
     actual := rootNode.IntermediateOutput()
 
-    expected := "# site title\n\n[Child1](file://child1.html) [Child2](file://child2.html) \n\n"
+    expected := "# site title\n\n[Child1](child1.html) [Child2](child2.html) \n\n"
 
     if string(actual) != expected {
         fmt.Printf("ACTUAL:\n=====\n%s=====\n", actual)
@@ -239,7 +239,7 @@ func TestMarkdownDialect_RenderIntermediate_Link(t *testing.T) {
 
     actual := rootNode.IntermediateOutput()
 
-    expected := "# site title\n\n[Child1](file://child1.html)\n\n"
+    expected := "# site title\n\n[Child1](child1.html)\n\n"
 
     if string(actual) != expected {
         fmt.Printf("ACTUAL:\n=====\n%s=====\n", actual)

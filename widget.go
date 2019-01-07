@@ -14,14 +14,20 @@ const (
 // Image
 
 type ImageWidget struct {
-    AltText string
-    Locator ResourceLocator
+    AltText       string
+    Locator       ResourceLocator
+    Width, Height int
 }
 
-func NewImageWidget(altText string, locator ResourceLocator) (iw ImageWidget) {
+// NewImageWidget creates an image widget. If width and height are zero, no
+// width/height will be prescribed. If just the width is given, the height will
+// be scaled accordingly.
+func NewImageWidget(altText string, locator ResourceLocator, width, height int) (iw ImageWidget) {
     return ImageWidget{
         AltText: altText,
         Locator: locator,
+        Height:  height,
+        Width:   width,
     }
 }
 

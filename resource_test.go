@@ -10,10 +10,10 @@ import (
     "github.com/dsoprea/go-logging"
 )
 
-func TestNewEmbeddedResourceLocator(t *testing.T) {
+func TestNewEmbeddedResourceLocatorWithBytes(t *testing.T) {
     raw := []byte{1, 2, 3}
 
-    erl, err := NewEmbeddedResourceLocator("mime/type", raw)
+    erl, err := NewEmbeddedResourceLocatorWithBytes("mime/type", raw)
     log.PanicIf(err)
 
     uri := erl.Uri()
@@ -49,7 +49,7 @@ func getTempFilepath(filename string) (tempPath string, f *os.File) {
     return tempPath, f
 }
 
-func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_Deferred(t *testing.T) {
+func NewEmbeddedResourceLocator_DetectMimetype_Deferred(t *testing.T) {
     tempPath, f := getTempFilepath("resource.png")
     defer os.RemoveAll(tempPath)
 
@@ -61,7 +61,7 @@ func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_Deferred(t *testi
     err = f.Sync()
     log.PanicIf(err)
 
-    erl, err := NewEmbeddedResourceLocatorWithFilepath(f.Name(), "", false)
+    erl, err := NewEmbeddedResourceLocator(f.Name(), "", false)
     log.PanicIf(err)
 
     if erl.Base64EncodedData != "" {
@@ -79,7 +79,7 @@ func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_Deferred(t *testi
     }
 }
 
-func TestNewEmbeddedResourceLocatorWithFilepath_NoDetectMimetype_Deferred(t *testing.T) {
+func NewEmbeddedResourceLocator_NoDetectMimetype_Deferred(t *testing.T) {
     f, err := ioutil.TempFile("", "resource")
     log.PanicIf(err)
 
@@ -93,7 +93,7 @@ func TestNewEmbeddedResourceLocatorWithFilepath_NoDetectMimetype_Deferred(t *tes
     err = f.Sync()
     log.PanicIf(err)
 
-    erl, err := NewEmbeddedResourceLocatorWithFilepath(f.Name(), "image/png", false)
+    erl, err := NewEmbeddedResourceLocator(f.Name(), "image/png", false)
     log.PanicIf(err)
 
     if erl.Base64EncodedData != "" {
@@ -111,7 +111,7 @@ func TestNewEmbeddedResourceLocatorWithFilepath_NoDetectMimetype_Deferred(t *tes
     }
 }
 
-func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_NoDefer(t *testing.T) {
+func NewEmbeddedResourceLocator_DetectMimetype_NoDefer(t *testing.T) {
     tempPath, f := getTempFilepath("resource.png")
     defer os.RemoveAll(tempPath)
 
@@ -123,7 +123,7 @@ func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_NoDefer(t *testin
     err = f.Sync()
     log.PanicIf(err)
 
-    erl, err := NewEmbeddedResourceLocatorWithFilepath(f.Name(), "", true)
+    erl, err := NewEmbeddedResourceLocator(f.Name(), "", true)
     log.PanicIf(err)
 
     if erl.Base64EncodedData == "" {

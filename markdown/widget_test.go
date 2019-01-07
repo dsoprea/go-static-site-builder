@@ -13,7 +13,7 @@ func TestImageWidgetToMarkdown(t *testing.T) {
     altText := "alt text"
     lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 
-    iw := sitebuilder.NewImageWidget(altText, lrl)
+    iw := sitebuilder.NewImageWidget(altText, lrl, 0, 0)
 
     b := new(bytes.Buffer)
 

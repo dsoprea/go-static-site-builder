@@ -8,7 +8,6 @@ import (
     "io/ioutil"
     "mime"
     "os"
-    "path"
     "path/filepath"
 
     "github.com/dsoprea/go-logging"
@@ -66,11 +65,8 @@ func (splrl *SitePageLocalResourceLocator) Uri() string {
         log.Panicf("resource refers to invalid page-ID [%s]", splrl.PageId)
     }
 
-    outputPath := splrl.sb.Context().HtmlOutputPath()
     filename := splrl.sb.Context().GetFinalPageFilename(splrl.PageId)
-    filepath := path.Join(outputPath, filename)
-
-    return fmt.Sprintf("file://%s", filepath)
+    return filename
 }
 
 // Embedded data (rather than any local or remote references).
@@ -81,7 +77,7 @@ type EmbeddedResourceLocator struct {
     Filepath          string
 }
 
-func NewEmbeddedResourceLocator(mimeType string, raw []byte) (erl *EmbeddedResourceLocator, err error) {
+func NewEmbeddedResourceLocatorWithBytes(mimeType string, raw []byte) (erl *EmbeddedResourceLocator, err error) {
     defer func() {
         if state := recover(); state != nil {
             err = log.Wrap(state.(error))
@@ -132,11 +128,11 @@ func NewEmbeddedResourceLocatorWithReader(mimeType string, r io.Reader) (erl *Em
     return erl, nil
 }
 
-// NewEmbeddedResourceLocatorWithFilepath will read the given file and then
+// NewEmbeddedResourceLocator will read the given file and then
 // embed it. If `mimeType` is an empty-string, we will detect it based on the
 // extension. If `readImmediately` is `false`, we'll read and embed it
 // immediately rather than defer until the URI is actually requested.
-func NewEmbeddedResourceLocatorWithFilepath(localFilepath, mimeType string, readImmediately bool) (erl *EmbeddedResourceLocator, err error) {
+func NewEmbeddedResourceLocator(localFilepath, mimeType string, readImmediately bool) (erl *EmbeddedResourceLocator, err error) {
     defer func() {
         if state := recover(); state != nil {
             err = log.Wrap(state.(error))

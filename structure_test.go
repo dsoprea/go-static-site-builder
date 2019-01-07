@@ -47,7 +47,7 @@ func TestSiteNode_Render(t *testing.T) {
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    iw := NewImageWidget("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl, 0, 0)
 
     err := pb.AddContentImage(iw)
     log.PanicIf(err)
@@ -84,7 +84,7 @@ func TestSiteNode_AddChildNode(t *testing.T) {
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    iw := NewImageWidget("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl, 0, 0)
 
     err := pb.AddContentImage(iw)
     log.PanicIf(err)
@@ -127,7 +127,7 @@ func TestSiteBuilder_WriteToPath(t *testing.T) {
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    iw := NewImageWidget("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl, 0, 0)
 
     err = pb.AddContentImage(iw)
     log.PanicIf(err)
@@ -184,7 +184,7 @@ func TestSiteBuilder_writeToPath_Simple(t *testing.T) {
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    iw := NewImageWidget("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl, 0, 0)
 
     err = pb.AddContentImage(iw)
     log.PanicIf(err)
@@ -244,7 +244,7 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
 
     lrl := NewLocalResourceLocator("some/image/path")
 
-    iw := NewImageWidget("image alt text", lrl)
+    iw := NewImageWidget("image alt text", lrl, 0, 0)
 
     err = pb.AddContentImage(iw)
     log.PanicIf(err)

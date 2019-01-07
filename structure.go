@@ -3,6 +3,7 @@ package sitebuilder
 import (
     "fmt"
     "io/ioutil"
+    "os"
     "path"
     "regexp"
 
@@ -221,6 +222,9 @@ func (sb *SiteBuilder) Root() (rootNode *SiteNode) {
 
 func (sb *SiteBuilder) WriteToPath() (err error) {
     err = sb.rootNode.Render()
+    log.PanicIf(err)
+
+    err = os.MkdirAll(sb.siteContext.htmlOutputPath, 0755)
     log.PanicIf(err)
 
     err = sb.writeToPath(sb.rootNode)

@@ -22,7 +22,7 @@ This project was created in order to solve the problem of producing an HTML-base
 
 # Example
 
-Example from [MarkdownDialect.RenderHtml](https://godoc.org/github.com/dsoprea/go-static-site-builder/markdown#example-MarkdownDialect-RenderHtml):
+Aside from a functioning command example at [example/helloworld](https://godoc.org/github.com/dsoprea/go-static-site-builder/example/helloworld), this is from the example at [MarkdownDialect.RenderHtml](https://godoc.org/github.com/dsoprea/go-static-site-builder/markdown#example-MarkdownDialect-RenderHtml):
 
 ```go
 tempPath, err := ioutil.TempDir("", "")
@@ -43,7 +43,7 @@ rootPb := rootNode.Builder()
 
 lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
 
-iw := sitebuilder.NewImageWidget("image alt text 1", lrl)
+iw := sitebuilder.NewImageWidget("image alt text 1", lrl, 0, 0)
 
 err = rootPb.AddContentImage(iw)
 log.PanicIf(err)
@@ -53,7 +53,7 @@ log.PanicIf(err)
 
 childPb := childNode1.Builder()
 
-iw = sitebuilder.NewImageWidget("image alt text 2", lrl)
+iw = sitebuilder.NewImageWidget("image alt text 2", lrl, 0, 0)
 
 err = childPb.AddContentImage(iw)
 log.PanicIf(err)
@@ -63,7 +63,7 @@ log.PanicIf(err)
 
 childPb = childNode2.Builder()
 
-iw = sitebuilder.NewImageWidget("image alt text 3", lrl)
+iw = sitebuilder.NewImageWidget("image alt text 3", lrl, 0, 0)
 
 err = childPb.AddContentImage(iw)
 log.PanicIf(err)
@@ -73,7 +73,7 @@ log.PanicIf(err)
 
 childPb = childChildNode1.Builder()
 
-iw = sitebuilder.NewImageWidget("image alt text 4", lrl)
+iw = sitebuilder.NewImageWidget("image alt text 4", lrl, 0, 0)
 
 err = childPb.AddContentImage(iw)
 log.PanicIf(err)
@@ -150,10 +150,8 @@ index.html
 
 <p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
 
-<p><a href="file://example_path/child1.html">Child1</a> <a href="file://example_path/child2.html">Child2</a></p>
+<p><a href="child1.html">Child1</a> <a href="child2.html">Child2</a></p>
 ```
-
-(In the example above, no links were added so no links are present.)
 
 
 # To Dos
