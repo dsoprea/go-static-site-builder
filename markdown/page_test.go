@@ -5,7 +5,6 @@ import (
     "io/ioutil"
     "os"
     "path"
-    "strings"
     "testing"
 
     "github.com/dsoprea/go-logging"
@@ -134,10 +133,7 @@ func ExampleMarkdownDialect_RenderHtml() {
         content, err := ioutil.ReadFile(filepath)
         log.PanicIf(err)
 
-        // For the [testable] example.
-        fixedContent := strings.Replace(string(content), tempPath, "example_path", -1)
-
-        _, err = os.Stdout.Write([]byte(fixedContent))
+        _, err = os.Stdout.Write([]byte(content))
         log.PanicIf(err)
 
         fmt.Printf("\n")
