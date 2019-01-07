@@ -17,6 +17,7 @@ This project was created in order to solve the problem of producing an HTML-base
 - Website structure is serializable and therefore storable so that it can be stored, recalled, modified, and rerendered later.
 - When the website is rendered, it is first rendered as intermediate content and then rendered as HTML content. This allows us to focus on producing lightweight markup while being able to offload the actual HTML production to a third-party tool that specializes in that. This consequently enables you to debug content issues in the HTML by inspecting the intermediate content.
 - The intermediate content supports multiple dialects. This project comes with a [Markdown](https://daringfireball.net/projects/markdown) dialect.
+- Images can be embedded directly into the HTML content.
 
 
 # Example

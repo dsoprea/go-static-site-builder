@@ -4,6 +4,7 @@ import (
     "bytes"
     "io/ioutil"
     "os"
+    "path"
     "testing"
 
     "github.com/dsoprea/go-logging"
@@ -36,15 +37,25 @@ func TestNewEmbeddedResourceLocatorWithReader(t *testing.T) {
     }
 }
 
-func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_Deferred(t *testing.T) {
-    f, err := ioutil.TempFile("", "resource*.png")
+func getTempFilepath(filename string) (tempPath string, f *os.File) {
+    tempPath, err := ioutil.TempDir("", "")
     log.PanicIf(err)
 
-    defer os.Remove(f.Name())
+    filepath := path.Join(tempPath, filename)
+
+    f, err = os.Create(filepath)
+    log.PanicIf(err)
+
+    return tempPath, f
+}
+
+func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_Deferred(t *testing.T) {
+    tempPath, f := getTempFilepath("resource.png")
+    defer os.RemoveAll(tempPath)
 
     raw := []byte{1, 2, 3}
 
-    _, err = f.Write(raw)
+    _, err := f.Write(raw)
     log.PanicIf(err)
 
     err = f.Sync()
@@ -101,14 +112,12 @@ func TestNewEmbeddedResourceLocatorWithFilepath_NoDetectMimetype_Deferred(t *tes
 }
 
 func TestNewEmbeddedResourceLocatorWithFilepath_DetectMimetype_NoDefer(t *testing.T) {
-    f, err := ioutil.TempFile("", "resource*.png")
-    log.PanicIf(err)
-
-    defer os.Remove(f.Name())
+    tempPath, f := getTempFilepath("resource.png")
+    defer os.RemoveAll(tempPath)
 
     raw := []byte{1, 2, 3}
 
-    _, err = f.Write(raw)
+    _, err := f.Write(raw)
     log.PanicIf(err)
 
     err = f.Sync()
