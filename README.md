@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/dsoprea/go-static-site-builder.svg?branch=master)](https://travis-ci.org/dsoprea/go-static-site-builder)
 [![Coverage Status](https://coveralls.io/repos/github/dsoprea/go-static-site-builder/badge.svg?branch=master)](https://coveralls.io/github/dsoprea/go-static-site-builder?branch=master)
-[![GoDoc](https://godoc.org/github.com/dsoprea/go-static-site-builder?status.svg)](https://godoc.org/github.com/dsoprea/go-static-site-builder/index)
+[![GoDoc](https://godoc.org/github.com/dsoprea/go-static-site-builder?status.svg)](https://godoc.org/github.com/dsoprea/go-static-site-builder)
 
 
 # Overview
