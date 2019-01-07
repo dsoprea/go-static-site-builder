@@ -25,3 +25,20 @@ func TestImageWidgetToMarkdown(t *testing.T) {
         t.Fatalf("Content not correct: [%s]", content)
     }
 }
+
+func TestLinkWidgetToMarkdown(t *testing.T) {
+    text := "text"
+    lrl := sitebuilder.NewLocalResourceLocator("some/file")
+
+    lw := sitebuilder.NewLinkWidget(text, lrl)
+
+    b := new(bytes.Buffer)
+
+    err := LinkWidgetToMarkdown(lw, b)
+    log.PanicIf(err)
+
+    content := b.String()
+    if content != "[text](file://some/file)" {
+        t.Fatalf("Content not correct: [%s]", content)
+    }
+}
