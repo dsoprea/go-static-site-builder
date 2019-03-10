@@ -128,7 +128,7 @@ func (sn *SiteNode) AddChildNode(pageId, pageTitle string) (childNode *SiteNode,
     }
 
     if pageIdRe.MatchString(pageId) == false {
-        log.Panicf("page-ID has an invalid format")
+        log.Panicf("page-ID has an invalid format: [%s]", pageId)
     }
 
     childNode = NewSiteNode(sn.sb, pageId, pageTitle)
