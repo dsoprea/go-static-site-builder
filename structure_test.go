@@ -303,7 +303,9 @@ func TestSiteNode_AddChildNode_InvalidFormat(t *testing.T) {
     // Generate content.
 
     _, err := sb.Root().AddChildNode("invalid child id", "child title1")
-    if err == nil || err.Error() != "page-ID has an invalid format" {
-        t.Fatalf("page-ID has an invalid format")
+    if err == nil {
+        t.Fatalf("Expected error.")
+    } else if err.Error() != "page-ID has an invalid format: [invalid child id]" {
+        t.Fatalf("We didn't encounter the right error: [%s]", err)
     }
 }
