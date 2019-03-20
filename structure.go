@@ -2,10 +2,11 @@ package sitebuilder
 
 import (
     "fmt"
-    "io/ioutil"
     "os"
     "path"
     "regexp"
+
+    "io/ioutil"
 
     "github.com/dsoprea/go-logging"
 )
@@ -63,6 +64,10 @@ type SiteNode struct {
     Children []*SiteNode
 }
 
+func (sn *SiteNode) String() string {
+    return fmt.Sprintf("SiteNode<PAGE-ID=[%s] PAGE-TITLE=[%s]>", sn.PageId, sn.PageTitle)
+}
+
 func NewSiteNode(sb *SiteBuilder, pageId string, pageTitle string) (sn *SiteNode) {
     content := NewPageContent()
 
@@ -100,6 +105,12 @@ func (sn *SiteNode) FinalOutput() []byte {
 }
 
 func (sn *SiteNode) Render() (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
     err = sn.sb.dialect.RenderIntermediate(sn)
     log.PanicIf(err)
 
@@ -221,6 +232,12 @@ func (sb *SiteBuilder) Root() (rootNode *SiteNode) {
 }
 
 func (sb *SiteBuilder) WriteToPath() (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
     err = sb.rootNode.Render()
     log.PanicIf(err)
 
@@ -234,6 +251,12 @@ func (sb *SiteBuilder) WriteToPath() (err error) {
 }
 
 func (sb *SiteBuilder) writeToPath(sn *SiteNode) (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
     filename := sb.Context().GetFinalPageFilename(sn.PageId)
     pageFilepath := path.Join(sb.siteContext.htmlOutputPath, filename)
 

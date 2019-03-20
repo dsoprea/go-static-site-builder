@@ -90,7 +90,7 @@ func main() {
 
     nw := sitebuilder.NewNavbarWidget(items)
 
-    err = rootPb.AddNavbar(nw)
+    err = rootPb.AddHorizontalNavbar(nw)
     log.PanicIf(err)
 
     // Render and write.

@@ -3,6 +3,7 @@ package markdowndialect
 import (
     "fmt"
     "io"
+    "strings"
 
     "github.com/dsoprea/go-logging"
 
@@ -27,7 +28,7 @@ func ImageWidgetToMarkdown(iw sitebuilder.ImageWidget, w io.Writer) (err error) 
         _, err = fmt.Fprintf(w, "<br /><br />\n\n")
         log.PanicIf(err)
     } else {
-        _, err = fmt.Fprintf(w, "![%s](%s \"%s\")", iw.AltText, uri, iw.AltText)
+        _, err = fmt.Fprintf(w, "![%s](%s \"%s\")\n\n", iw.AltText, uri, iw.AltText)
         log.PanicIf(err)
     }
 
@@ -38,6 +39,92 @@ func LinkWidgetToMarkdown(lw sitebuilder.LinkWidget, w io.Writer) (err error) {
     uri := lw.Locator.Uri()
 
     _, err = fmt.Fprintf(w, "[%s](%s)", lw.Text, uri)
+    log.PanicIf(err)
+
+    return nil
+}
+
+func HeadingToMarkdown(h sitebuilder.HeadingWidget, w io.Writer) (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
+    prefix := strings.Repeat("#", h.Level)
+
+    _, err = fmt.Fprintf(w, "%s %s\n\n", prefix, h.Text)
+    log.PanicIf(err)
+
+    return nil
+}
+
+func WriteNewline(w io.Writer) (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
+    _, err = w.Write([]byte{'\n'})
+    log.PanicIf(err)
+
+    return nil
+}
+
+func WriteDoubleNewline(w io.Writer) (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
+    _, err = w.Write([]byte{'\n', '\n'})
+    log.PanicIf(err)
+
+    return nil
+}
+
+func InlineLinkListToMarkdown(items []sitebuilder.LinkWidget, w io.Writer) (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
+    for _, lw := range items {
+        err = LinkWidgetToMarkdown(lw, w)
+        log.PanicIf(err)
+
+        _, err = w.Write([]byte{' '})
+        log.PanicIf(err)
+    }
+
+    err = WriteDoubleNewline(w)
+    log.PanicIf(err)
+
+    return nil
+}
+
+func BulletedLinkListToMarkdown(items []sitebuilder.LinkWidget, w io.Writer) (err error) {
+    defer func() {
+        if state := recover(); state != nil {
+            err = log.Wrap(state.(error))
+        }
+    }()
+
+    for _, lw := range items {
+        _, err = w.Write([]byte("- "))
+        log.PanicIf(err)
+
+        err = LinkWidgetToMarkdown(lw, w)
+        log.PanicIf(err)
+
+        err = WriteNewline(w)
+        log.PanicIf(err)
+    }
+
+    err = WriteNewline(w)
     log.PanicIf(err)
 
     return nil
