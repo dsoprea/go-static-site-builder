@@ -1,13 +1,15 @@
 package sitebuilder
 
 import (
-    "encoding/base64"
     "errors"
     "fmt"
     "io"
-    "io/ioutil"
     "mime"
     "os"
+    "path"
+
+    "encoding/base64"
+    "io/ioutil"
     "path/filepath"
 
     "github.com/dsoprea/go-logging"
@@ -36,7 +38,11 @@ func NewLocalResourceLocator(localFilepath string) (lrl *LocalResourceLocator) {
 }
 
 func (lrl *LocalResourceLocator) Uri() string {
-    return fmt.Sprintf("file://%s", lrl.LocalFilepath)
+    if path.IsAbs(lrl.LocalFilepath) == true {
+        return fmt.Sprintf("file://%s", lrl.LocalFilepath)
+    } else {
+        return lrl.LocalFilepath
+    }
 }
 
 // A locator that points to the final output page for a node.
