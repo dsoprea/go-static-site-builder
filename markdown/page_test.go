@@ -23,7 +23,7 @@ func TestMarkdownDialect_RenderIntermediate_Image(t *testing.T) {
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
-    lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
+    lrl := sitebuilder.NewLocalResourceLocator("/some/image/path")
     iw := sitebuilder.NewImageWidget("image alt text", lrl, 0, 0)
 
     err := pb.AddContentImage(iw)
@@ -36,7 +36,7 @@ func TestMarkdownDialect_RenderIntermediate_Image(t *testing.T) {
 
     expected := `# site title
 
-![image alt text](file://some/image/path "image alt text")
+![image alt text](file:///some/image/path "image alt text")
 
 
 `
@@ -67,7 +67,7 @@ func ExampleMarkdownDialect_RenderHtml() {
 
     rootPb := rootNode.Builder()
 
-    lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
+    lrl := sitebuilder.NewLocalResourceLocator("/some/image/path")
 
     iw := sitebuilder.NewImageWidget("image alt text 1", lrl, 0, 0)
 
@@ -147,28 +147,28 @@ func ExampleMarkdownDialect_RenderHtml() {
     //
     // <h1>Child Page 1</h1>
     //
-    // <p><img src="file://some/image/path" alt="image alt text 2" title="image alt text 2" /></p>
+    // <p><img src="file:///some/image/path" alt="image alt text 2" title="image alt text 2" /></p>
     //
     // child2.html
     // ====================
     //
     // <h1>Child Page 2</h1>
     //
-    // <p><img src="file://some/image/path" alt="image alt text 3" title="image alt text 3" /></p>
+    // <p><img src="file:///some/image/path" alt="image alt text 3" title="image alt text 3" /></p>
     //
     // childChild1.html
     // ====================
     //
     // <h1>Child&rsquo;s Child Page 1</h1>
     //
-    // <p><img src="file://some/image/path" alt="image alt text 4" title="image alt text 4" /></p>
+    // <p><img src="file:///some/image/path" alt="image alt text 4" title="image alt text 4" /></p>
     //
     // index.html
     // ====================
     //
     // <h1>Site Title</h1>
     //
-    // <p><img src="file://some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
+    // <p><img src="file:///some/image/path" alt="image alt text 1" title="image alt text 1" /></p>
     //
     // <p><a href="child1.html">Child1</a> <a href="child2.html">Child2</a></p>
 }
@@ -256,7 +256,7 @@ func TestMarkdownDialect_renderStatement_Image(t *testing.T) {
 
     pb := rootNode.Builder()
 
-    lrl := sitebuilder.NewLocalResourceLocator("some/image/path")
+    lrl := sitebuilder.NewLocalResourceLocator("/some/image/path")
     iw := sitebuilder.NewImageWidget("image alt text", lrl, 0, 0)
 
     err := pb.AddContentImage(iw)
@@ -275,7 +275,7 @@ func TestMarkdownDialect_renderStatement_Image(t *testing.T) {
     log.PanicIf(err)
 
     actual := b.String()
-    expected := "![image alt text](file://some/image/path \"image alt text\")\n\n"
+    expected := "![image alt text](file:///some/image/path \"image alt text\")\n\n"
 
     if actual != expected {
         t.Fatalf("Image not rendered to Markdown correct:\nACTUAL:\n%s\n\nEXPECTED:\n%s", actual, expected)
@@ -292,8 +292,8 @@ func TestMarkdownDialect_renderStatement_HorizontalNavbar(t *testing.T) {
     pb := rootNode.Builder()
 
     items := []sitebuilder.LinkWidget{
-        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewLocalResourceLocator("some/image/path1")),
-        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewLocalResourceLocator("some/image/path2")),
+        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewLocalResourceLocator("/some/image/path1")),
+        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewLocalResourceLocator("/some/image/path2")),
     }
 
     nw := sitebuilder.NewNavbarWidget(items)
@@ -314,7 +314,7 @@ func TestMarkdownDialect_renderStatement_HorizontalNavbar(t *testing.T) {
     log.PanicIf(err)
 
     actual := b.String()
-    expected := "[Child1](file://some/image/path1) [Child2](file://some/image/path2) \n\n"
+    expected := "[Child1](file:///some/image/path1) [Child2](file:///some/image/path2) \n\n"
 
     if actual != expected {
         t.Fatalf("Horizontal navbar not rendered to Markdown correct:\nACTUAL:\n[%s]\n\nEXPECTED:\n[%s]", actual, expected)
@@ -331,8 +331,8 @@ func TestMarkdownDialect_renderStatement_VerticalNavbar(t *testing.T) {
     pb := rootNode.Builder()
 
     items := []sitebuilder.LinkWidget{
-        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewLocalResourceLocator("some/image/path1")),
-        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewLocalResourceLocator("some/image/path2")),
+        sitebuilder.NewLinkWidget("Child1", sitebuilder.NewLocalResourceLocator("/some/image/path1")),
+        sitebuilder.NewLinkWidget("Child2", sitebuilder.NewLocalResourceLocator("/some/image/path2")),
     }
 
     nw := sitebuilder.NewNavbarWidget(items)
@@ -360,8 +360,8 @@ func TestMarkdownDialect_renderStatement_VerticalNavbar(t *testing.T) {
     actual := b.String()
     expected := `# test heading
 
-- [Child1](file://some/image/path1)
-- [Child2](file://some/image/path2)
+- [Child1](file:///some/image/path1)
+- [Child2](file:///some/image/path2)
 
 `
 
@@ -379,7 +379,7 @@ func TestMarkdownDialect_renderStatement_Link(t *testing.T) {
 
     pb := rootNode.Builder()
 
-    lw := sitebuilder.NewLinkWidget("SomeLink", sitebuilder.NewLocalResourceLocator("some/image/path"))
+    lw := sitebuilder.NewLinkWidget("SomeLink", sitebuilder.NewLocalResourceLocator("/some/image/path"))
 
     err := pb.AddLink(lw)
     log.PanicIf(err)
@@ -397,7 +397,7 @@ func TestMarkdownDialect_renderStatement_Link(t *testing.T) {
     log.PanicIf(err)
 
     actual := b.String()
-    expected := "[SomeLink](file://some/image/path)"
+    expected := "[SomeLink](file:///some/image/path)"
 
     if actual != expected {
         t.Fatalf("Link not rendered to Markdown correct:\nACTUAL:\n[%s]\n\nEXPECTED:\n[%s]", actual, expected)

@@ -45,7 +45,7 @@ func TestSiteNode_Render(t *testing.T) {
     rootNode := NewSiteNode(sb, "node_id", "node title")
     pb := rootNode.Builder()
 
-    lrl := NewLocalResourceLocator("some/image/path")
+    lrl := NewLocalResourceLocator("/some/image/path")
 
     iw := NewImageWidget("image alt text", lrl, 0, 0)
 
@@ -60,7 +60,7 @@ func TestSiteNode_Render(t *testing.T) {
     actual := rootNode.FinalOutput()
 
     expected := `<header>node title</header>
-<widget>image alt text | file://some/image/path</widget>
+<widget>image alt text | file:///some/image/path</widget>
 <footer>node title</footer>
 `
 
@@ -82,7 +82,7 @@ func TestSiteNode_AddChildNode(t *testing.T) {
     rootNode := NewSiteNode(sb, "node_id", "node title")
     pb := rootNode.Builder()
 
-    lrl := NewLocalResourceLocator("some/image/path")
+    lrl := NewLocalResourceLocator("/some/image/path")
 
     iw := NewImageWidget("image alt text", lrl, 0, 0)
 
@@ -100,7 +100,7 @@ func TestSiteNode_AddChildNode(t *testing.T) {
     actual := rootNode.FinalOutput()
 
     expected := `<header>node title</header>
-<widget>image alt text | file://some/image/path</widget>
+<widget>image alt text | file:///some/image/path</widget>
 <footer>node title</footer>
 `
 
@@ -125,7 +125,7 @@ func TestSiteBuilder_WriteToPath(t *testing.T) {
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
-    lrl := NewLocalResourceLocator("some/image/path")
+    lrl := NewLocalResourceLocator("/some/image/path")
 
     iw := NewImageWidget("image alt text", lrl, 0, 0)
 
@@ -157,7 +157,7 @@ func TestSiteBuilder_WriteToPath(t *testing.T) {
     actual := string(actualBytes)
 
     expected := `<header>site title</header>
-<widget>image alt text | file://some/image/path</widget>
+<widget>image alt text | file:///some/image/path</widget>
 <footer>site title</footer>
 `
 
@@ -182,7 +182,7 @@ func TestSiteBuilder_writeToPath_Simple(t *testing.T) {
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
-    lrl := NewLocalResourceLocator("some/image/path")
+    lrl := NewLocalResourceLocator("/some/image/path")
 
     iw := NewImageWidget("image alt text", lrl, 0, 0)
 
@@ -217,7 +217,7 @@ func TestSiteBuilder_writeToPath_Simple(t *testing.T) {
     actual := string(actualBytes)
 
     expected := `<header>site title</header>
-<widget>image alt text | file://some/image/path</widget>
+<widget>image alt text | file:///some/image/path</widget>
 <footer>site title</footer>
 `
 
@@ -242,7 +242,7 @@ func TestSiteBuilder_writeToPath_Tree(t *testing.T) {
     rootNode := sb.Root()
     pb := rootNode.Builder()
 
-    lrl := NewLocalResourceLocator("some/image/path")
+    lrl := NewLocalResourceLocator("/some/image/path")
 
     iw := NewImageWidget("image alt text", lrl, 0, 0)
 
